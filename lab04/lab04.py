@@ -149,7 +149,7 @@ def something_to_military(s):
     Parameter s: the candidate time to format
     Precondition: NONE (s can be any value)
     """
-    #if (is_time_format(s)):()
+    #if (is_time_format(s)):
     #    return time_to_military(s)
     #else:
     #    print("Invalid time format")
