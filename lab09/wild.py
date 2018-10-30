@@ -73,8 +73,8 @@ class WildCard(card.Card):
         rank is.
         """
         # Replace this line with proper code to support 'WC'
-        if self.isWild() is True:
-             return 'WC'
+        if self.isWild():
+            return 'WC'
         else:
             return super().getCode()
 
@@ -95,12 +95,13 @@ class WildCard(card.Card):
         Precondition: value is a 2-char string that is either 'WC' or has
         value[0] in 'A23456789TJQK' and value[1] in 'CDHS'.
         """
-        # Replace this line with proper code to support 'WC'
-        if self.isWild() is True:
+        if value == 'WC':
             self._suit=3
             self._rank=1
+            self._wild= True
         else:
-            return super().setCode(value)
+            super().setCode(value)
+            self._wild= False
 
 
     def __init__(self, suit=0, rank=1, wild=False, code=None):
@@ -134,14 +135,15 @@ class WildCard(card.Card):
         code[0] in 'A23456789TJQK' and code[1] in 'CDHS'
         """
         # DO YOU NEED TO ASSERT PRECONDITIONS?
-        self._wild= self.setWild(wild)
+        self._wild= wild
         if not wild:
             super().__init__(suit, rank, code)
         elif code is not None:
             self.setCode(code)
         else:
-
-
+            super().setSuit(suit)
+            super().setRank(rank)
+            self._code= 'WS'
 
     def __str__(self):
         """
@@ -172,8 +174,11 @@ class WildCard(card.Card):
         Parameter other: the value to compare
         Precondition: NONE (other can be anything)
         """
-        # TODO: implement me, according to my spec
-        pass
+        if isinstance(other, WildCard) and self.isWild() == other.isWild() and self.getCode() == other.getCode():
+            return True
+        else:
+            return False
+
 
     def __lt__(self, other):
         """
@@ -185,8 +190,13 @@ class WildCard(card.Card):
         Parameter other: the value to compare
         Precondition: other is a Card
         """
-        # TODO: implement me, according to my spec
-        pass
+        if (self._rank == other._rank):
+            return self._suit < other._suit or (self._suit == other._suit and self._wild is True and other._wild is False)
+        else:
+            left = len(self._RANK_NAMES) if self._rank == 1 else self._rank
+            rght = len(self._RANK_NAMES) if other._rank == 1 else other._rank
+            return left < rght
+
 
     @classmethod
     def deck(cls):
